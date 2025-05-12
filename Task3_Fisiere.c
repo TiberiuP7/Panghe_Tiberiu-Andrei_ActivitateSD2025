@@ -317,7 +317,10 @@ int main() {
     //Scriem un obiect de tip Tapiserie in fisier
     Tapiserie tapiserie1;
     tapiserie1 = citireTapiserie(tapiserie1);
-    scriereobiectInFisier("obiect.txt", tapiserie1);
+    printf("Introduceti numele fisierului in care doriti sa scrieti tapiseria: ");
+    char numeFisier[50];
+    scanf("%s", numeFisier);
+    scriereobiectInFisier(numeFisier, tapiserie1);
     //Verificam daca a fost scris corect in fisier
     FILE* f= fopen("obiect.txt", "r");
     if (f == NULL) {
@@ -346,14 +349,39 @@ int main() {
     afisareTapiserie(tapiserie1);
 
     //Scriem un vector de tip Tapiserie in fisier
-    scrierevectorInFisier("vector.txt", tapiserie, n);
+    int m;
+    printf("Introduceti numarul de tapiserii pe care doriti sa le scrieti din vector in fisier: ");
+    scanf("%d", &m);
+    //Alocam memorie pentru vectorul de tapiserii
+    Tapiserie* tapiseriiVector= (Tapiserie*)malloc(sizeof(Tapiserie) * m);
+    if(tapiseriiVector == NULL) {
+        printf("Eroare la alocarea memoriei\n");
+        exit(1);
+    }
+    for(int i=0; i<m; i++) {
+        tapiseriiVector[i] = citireTapiserie(tapiseriiVector[i]);
+    }
+    printf("Introduceti numele fisierului in care doriti sa scrieti vectorul de tapiserii: ");
+    char numeFisierVector[50];
+    scanf("%s", numeFisierVector);
+    scrierevectorInFisier(numeFisierVector, tapiseriiVector, m);
 
     //Eliberam memoria pentru vectorul de tapiserii
     for(int i=0; i<n; i++) {
         eliberareMemorieTapiserie(&tapiserie[i]);
     }
+
+    for(int i=0; i<m; i++) {
+        eliberareMemorieTapiserie(&tapiseriiVector[i]);
+    }
+
+    eliberareMemorieTapiserie(&tapiserie1);
+
+    free(tapiseriiVector);
+    tapiseriiVector= NULL;
     free(tapiserie);
     tapiserie= NULL;
+    
 
     //Eliberam memoria pentru tapiseria citita din fisier
     eliberareMemorieTapiserie(&tapiserie1);
